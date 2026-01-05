@@ -1,51 +1,42 @@
 plugins {
-	id 'fabric-loom' version '0.2.6-SNAPSHOT'
+	id 'fabric-loom' version '1.14-SNAPSHOT'
 	id 'maven-publish'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
-archivesBaseName = project.archives_base_name
-version = project.mod_version + "+" +  project.minecraft_version
-group = project.maven_group
-
-minecraft {
+base {
+    archivesName = project.archives_base_name
+    version = project.mod_version + "+" + project.minecraft_version
+    group = project.maven_group
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+	modApi "net.fabricmc:fabric-loader:${project.loader_version}"
 }
 
 processResources {
 	inputs.property "version", project.version
 
-	from(sourceSets.main.resources.srcDirs) {
-		include "fabric.mod.json"
-		expand "version": project.version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "fabric.mod.json"
-	}
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
 	options.encoding = "UTF-8"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
-	from sourceSets.main.allSource
 }
 
 jar {
 	from "LICENSE"
+}
+
+java {
+    withSourcesJar()
+
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
 }
 
 publishing {
@@ -64,16 +55,7 @@ publishing {
 		// mavenLocal()
 	}
 }
+
 repositories {
     mavenCentral()
-}
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
