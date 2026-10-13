@@ -2,7 +2,7 @@
 
 A client-side Fabric mod that makes every creeper much more classy by giving it a top hat and monocle.
 
-This branch targets Minecraft 26.3 and requires Java 25, Fabric Loader 0.19.5 or newer, and Fabric API.
+This branch targets Minecraft 26.3 and requires Java 25, Fabric Loader 0.19.3 or newer, and Fabric API.
 
 ## Screenshots
 
