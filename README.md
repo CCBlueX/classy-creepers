@@ -1,6 +1,16 @@
 # Classy Creepers Mod
 
-A mod that makes every creeper much more classy.
+A client-side Fabric mod that makes every creeper much more classy by giving it a top hat and monocle.
+
+This branch targets Minecraft 26.3 and requires Java 25, Fabric Loader 0.19.5 or newer, and Fabric API.
+
+## Screenshots
+
+![screenshot](gh_assets/screenshot.png)
+
+## Building
+
+Run `./gradlew build` with Java 25. The distributable mod jar is written to `build/libs`.
 
 ## License
 

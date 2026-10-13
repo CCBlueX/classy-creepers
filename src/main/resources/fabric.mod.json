@@ -8,24 +8,23 @@
     "NurMarvin"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/classy-creepers",
-    "sources": "https://github.com/NurMarvin/classy-creepers/",
-    "issues": "https://github.com/NurMarvin/classy-creepers/issues"
+    "homepage": "https://github.com/CCBlueX/classy-creepers",
+    "sources": "https://github.com/CCBlueX/classy-creepers",
+    "issues": "https://github.com/CCBlueX/classy-creepers/issues"
   },
   "license": "CC0-1.0",
   "icon": "assets/classycreepers/icon.png",
   "environment": "client",
   "entrypoints": {
-    "main": [
-      "de.nurmarvin.classycreepers.ClassyCreepers"
+    "client": [
+      "net.ccbluex.classycreepers.ClassyCreepers"
     ]
   },
-  "mixins": [
-    "classycreepers.mixins.json"
-  ],
   "depends": {
-    "fabricloader": ">=0.7.2",
-    "minecraft": ">=1.15-"
+    "fabricloader": ">=0.19.5",
+    "fabric-api": "*",
+    "minecraft": "~26.3",
+    "java": ">=25"
   },
   "custom": {
     "modmenu:clientsideOnly": true
