@@ -1,0 +1,48 @@
+plugins {
+    id "java"
+    id "com.gradleup.shadow" version "8.3.9"
+}
+
+version = "${project.mod_version}+${project.minecraft_version}"
+
+base {
+    archivesName = "classy-creepers-runtime-injection"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+    maven { url = "https://libraries.minecraft.net/" }
+}
+
+dependencies {
+    implementation "org.ow2.asm:asm:6.0"
+    implementation "org.ow2.asm:asm-tree:6.0"
+    implementation files("${System.getProperty("java.home")}/../lib/tools.jar")
+    compileOnly "org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+jar {
+    archiveClassifier = "slim"
+}
+
+shadowJar {
+    archiveClassifier = ""
+    relocate "org.objectweb.asm", "sexy.poke.org.objectweb.asm"
+    manifest.attributes(
+        "Main-Class": "Main",
+        "Agent-Class": "sexy.poke.AgentMain",
+        "Can-Redefine-Classes": "true",
+        "Can-Retransform-Classes": "true"
+    )
+}
+
+assemble.dependsOn shadowJar
