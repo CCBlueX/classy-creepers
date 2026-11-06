@@ -1,0 +1,71 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = "https://maven.minecraftforge.net/" }
+        maven { url = "https://repo.spongepowered.org/repository/maven-public/" }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
+        classpath "org.spongepowered:mixingradle:0.6-SNAPSHOT"
+    }
+}
+
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "org.spongepowered.mixin"
+
+version = "${mod_version}+${minecraft_version}"
+group = "net.ccbluex"
+archivesBaseName = "classy-creepers"
+
+sourceCompatibility = targetCompatibility = 1.8
+
+minecraft {
+    version = forge_version
+    runDir = "run"
+    mappings = "stable_22"
+    clientRunArgs += ["--tweakClass", "org.spongepowered.asm.launch.MixinTweaker"]
+    clientJvmArgs += "-Dfml.coreMods.load=net.ccbluex.classycreepers.injection.MixinLoader"
+}
+
+repositories {
+    maven { url = "https://repo.spongepowered.org/repository/maven-public/" }
+}
+
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
+
+dependencies {
+    embed("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        transitive = false
+    }
+}
+
+mixin {
+    add sourceSets.main, "mixins.classycreepers.refmap.json"
+}
+
+jar {
+    from(configurations.embed.collect { it.isDirectory() ? it : zipTree(it) })
+    exclude "META-INF/*.SF", "META-INF/*.RSA", "META-INF/*.DSA"
+    manifest.attributes(
+        "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+        "TweakOrder": "0",
+        "MixinConfigs": "mixins.classycreepers.json",
+        "FMLCorePluginContainsFMLMod": "net.ccbluex.classycreepers.injection.MixinLoader"
+    )
+}
+
+getAssets.doFirst {
+    def assets = new File(gradle.gradleUserHomeDir, "caches/minecraft/assets/objects")
+    def index = new groovy.json.JsonSlurper().parse(getAssetIndex.outputs.files.singleFile)
+    index.objects.values().each { asset ->
+        def path = "${asset.hash.substring(0, 2)}/${asset.hash}"
+        def target = new File(assets, path)
+        if (!target.exists()) {
+            target.parentFile.mkdirs()
+            new URL("https://resources.download.minecraft.net/${path}").withInputStream { target << it }
+        }
+    }
+}

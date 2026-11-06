@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "minVersion": "0.7",
+  "package": "net.ccbluex.classycreepers.injection.mixins",
+  "refmap": "mixins.classycreepers.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinModelCreeper"
+  ]
+}
